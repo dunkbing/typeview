@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Settings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Settings</h1>
+    <label for="fontSize">Font Size:</label>
+    <input type="number" id="fontSize" value="24"><br><br>
+    <label for="padding">Padding:</label>
+    <input type="number" id="padding" value="10"><br><br>
+    <button id="applyButton">Apply</button>
+
+    <script>
+        const { invoke } = window.__TAURI__.tauri;
+
+        document.getElementById('applyButton').addEventListener('click', () => {
+            const fontSize = document.getElementById('fontSize').value;
+            const padding = document.getElementById('padding').value;
+            invoke('update_settings', { fontSize: parseInt(fontSize), padding: parseInt(padding) });
+        });
+    </script>
+</body>
+</html>
