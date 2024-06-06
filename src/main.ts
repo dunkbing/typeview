@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/tauri";
+import { appWindow } from "@tauri-apps/api/window";
 
 let greetInputEl: HTMLInputElement | null;
 let greetMsgEl: HTMLElement | null;
@@ -28,8 +29,17 @@ interface UpdateSettingsEvent extends Event {
   };
 }
 
-window.addEventListener("tauri://update-settings", (event: UpdateSettingsEvent) => {
-  const { fontSize, padding } = event.detail;
-  document.getElementById("text").style.fontSize = `${fontSize}px`;
-  document.getElementById("text").style.padding = `${padding}px`;
+window.addEventListener(
+  "tauri://update-settings",
+  (event: UpdateSettingsEvent) => {
+    const { fontSize, padding } = event.detail;
+    document.getElementById("text").style.fontSize = `${fontSize}px`;
+    document.getElementById("text").style.padding = `${padding}px`;
+  },
+);
+
+document.addEventListener("mousedown", (e) => {
+  if (e.button === 0) {
+    appWindow.startDragging();
+  }
 });

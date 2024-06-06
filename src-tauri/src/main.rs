@@ -2,7 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use std::sync::Mutex;
-use tauri::{Manager, WindowBuilder, WindowUrl, State};
+use tauri::{Manager, State, WindowBuilder, WindowUrl};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -27,13 +27,14 @@ fn main() {
         .setup(|app| {
             let window = app.get_window("main").unwrap();
             window.set_decorations(false).unwrap();
-            tauri::async_runtime::spawn(show_random_character(window));
+            // tauri::async_runtime::spawn(show_random_character(window));
 
-            let settings_window = WindowBuilder::new(app, "settings", WindowUrl::App("settings.html".into()))
-                .title("Settings")
-                .inner_size(400.0, 300.0)
-                .build()
-                .unwrap();
+            let settings_window =
+                WindowBuilder::new(app, "settings", WindowUrl::App("settings.html".into()))
+                    .title("Settings")
+                    .inner_size(400.0, 300.0)
+                    .build()
+                    .unwrap();
 
             Ok(())
         })

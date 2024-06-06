@@ -8,7 +8,8 @@
         <script type="module" src="/src/main.ts" defer></script>
         <style>
             body {
-                background-color: transparent;
+                /* background-color: transparent; */
+                background-color: rgba(0, 0, 0, 0.1);
                 color: black;
                 font-size: 24px;
                 display: flex;
@@ -16,11 +17,12 @@
                 align-items: center;
                 height: 100vh;
                 margin: 0;
+                user-select: none;
             }
         </style>
     </head>
 
-    <body>
+    <body data-tauri-drag-region>
         <div id="text">Hello, World!</div>
     </body>
 </html>
