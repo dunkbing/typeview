@@ -18,22 +18,25 @@
         "open": true
       },
       "window": {
-        "startDragging": true
+        "startDragging": true,
+        "setSize": true
       }
     },
     "windows": [
       {
         "title": "Tauri Overlay",
         "width": 200,
-        "height": 200,
+        "height": 100,
         "x": 100,
         "y": 100,
         "resizable": false,
         "fullscreen": false,
         "decorations": false,
-        "alwaysOnTop": true
+        "alwaysOnTop": true,
+        "transparent": true
       }
     ],
+    "macOSPrivateApi": true,
     "security": {
       "csp": null
     },

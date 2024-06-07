@@ -8,21 +8,41 @@
         <script type="module" src="/src/main.ts" defer></script>
         <style>
             body {
-                /* background-color: transparent; */
-                background-color: rgba(0, 0, 0, 0.1);
-                color: black;
-                font-size: 24px;
+                /* background-color: black; */
+                color: white;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 100vh;
                 margin: 0;
                 user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+                cursor: default;
+                font-size: 24px;
+                font-family: monospace;
+                font-weight: bold;
+                border-radius: 20px;
+            }
+            #content {
+                display: inline-block;
+                white-space: nowrap;
+                border-radius: 20px;
+            }
+            .keystroke {
+                display: inline-block;
+                padding: 10px;
+                white-space: nowrap;
+                opacity: 1;
+                transition: opacity 0.5s;
+            }
+
+            .keystroke.hide {
+                opacity: 0;
             }
         </style>
     </head>
 
     <body data-tauri-drag-region>
-        <div id="text">Hello, World!</div>
+        <div id="content"></div>
     </body>
 </html>
