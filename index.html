@@ -8,7 +8,6 @@
         <script type="module" src="/src/main.ts" defer></script>
         <style>
             body {
-                /* background-color: black; */
                 color: white;
                 display: flex;
                 justify-content: center;
@@ -21,23 +20,23 @@
                 font-size: 24px;
                 font-family: monospace;
                 font-weight: bold;
-                border-radius: 20px;
             }
             #content {
                 display: inline-block;
                 white-space: nowrap;
-                border-radius: 20px;
             }
             .keystroke {
-                display: inline-block;
-                padding: 10px;
-                white-space: nowrap;
-                opacity: 1;
-                transition: opacity 0.5s;
+                display: block;
+                padding: 5px 10px;
+                /* padding-left: 10px;
+                padding-right: 10px; */
+                /* white-space: nowrap; */
+                /* opacity: 1; */
+                /* transition: opacity 0.5s; */
             }
-
             .keystroke.hide {
                 opacity: 0;
+                transition: opacity 0.5s ease-out;
             }
         </style>
     </head>
