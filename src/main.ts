@@ -11,8 +11,13 @@ const content = document.getElementById("content") as HTMLDivElement;
 document.addEventListener("mousedown", (e) => {
   if (e.button === 0) {
     appWindow.startDragging();
+    clearTimeout(keystrokeTimeout);
   }
 });
+
+document.addEventListener("mouseup", () => {
+  keystrokeTimeout = window.setTimeout(clearKeystrokes, 2000);
+})
 
 async function adjustWindowSize(extraWidth: number = 0) {
   const keystrokeDivs = document.querySelectorAll(

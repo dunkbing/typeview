@@ -9,3 +9,14 @@ document.getElementById("applyButton")!.addEventListener("click", () => {
     padding: parseInt(padding),
   });
 });
+
+const soundSelect = document.getElementById("sound-select") as HTMLSelectElement;
+
+soundSelect.addEventListener("change", () => {
+  const selectedSound = soundSelect.value;
+  invoke("set_selected_sound", { sound: selectedSound });
+});
+
+invoke("get_selected_sound").then((selectedSound) => {
+  soundSelect.value = selectedSound as string;
+});

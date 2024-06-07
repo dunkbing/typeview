@@ -1,21 +1,54 @@
 use rdev::{listen, EventType, Key};
 use tauri::Manager;
+use std::{fs::File, sync::Arc};
+use std::io::BufReader;
+use rodio::{Decoder, OutputStream, Sink};
+use std::thread;
+
+use crate::AppState;
+
+fn play_sound(sound_path: String) {
+    thread::spawn(move || {
+        let (_stream, stream_handle) = OutputStream::try_default().unwrap();
+        let sink = Sink::try_new(&stream_handle).unwrap();
+
+        let file = File::open(sound_path).unwrap();
+        let source = Decoder::new(BufReader::new(file)).unwrap();
+
+        sink.append(source);
+        sink.sleep_until_end();
+    });
+}
 
 pub fn start_keystroke_listener(app: &tauri::App) {
     let window = app.get_window("main").unwrap();
+    let state = app.state::<AppState>().inner().clone();
+
+    let window = Arc::new(window);
+    let state = Arc::new(state);
+
     tauri::async_runtime::spawn(async move {
-        if let Err(error) = listen(move |event| match event.event_type {
-            EventType::KeyPress(key) => {
-                if let Some(key_str) = get_key_string(key) {
-                    window.emit("update-content", key_str).unwrap();
+        let window_clone = Arc::clone(&window);
+        let state_clone = Arc::clone(&state);
+
+        if let Err(error) = listen(move |event| {
+            match event.event_type {
+                EventType::KeyPress(key) => {
+                    if let Some(key_str) = get_key_string(key) {
+                        window_clone.emit("update-content", key_str).unwrap();
+
+                        let sound_path = state_clone.selected_sound.lock().unwrap().clone();
+                        play_sound(sound_path);
+                    }
                 }
+                _ => (),
             }
-            _ => (),
         }) {
             println!("Error: {:?}", error);
         }
     });
 }
+
 
 fn get_key_string(key: Key) -> Option<String> {
     match key {

@@ -7,7 +7,7 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "tauri-overlay",
+    "productName": "Klick",
     "version": "0.0.0"
   },
   "tauri": {
@@ -24,7 +24,7 @@
     },
     "windows": [
       {
-        "title": "Tauri Overlay",
+        "title": "Klick",
         "width": 200,
         "height": 100,
         "x": 100,
@@ -43,14 +43,15 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.tauri.dev",
+      "identifier": "com.klick.db99.dev",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
         "icons/128x128@2x.png",
         "icons/icon.icns",
         "icons/icon.ico"
-      ]
+      ],
+      "resources": ["sounds"]
     }
   }
 }
