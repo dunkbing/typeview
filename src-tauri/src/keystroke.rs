@@ -43,7 +43,7 @@ pub fn start_keystroke_listener(app: &tauri::App) {
                 if let Some(key_str) = get_key_string(key) {
                     window_clone.emit_to("main", "KeyPress", key_str).unwrap();
 
-                    let sound_name = state_clone.selected_sound.lock().unwrap().clone();
+                    let sound_name = state_clone.sound.lock().unwrap().clone();
                     let sound_path = format!("{}/{}", sounds_dir, sound_name);
 
                     play_sound(sound_path);

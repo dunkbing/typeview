@@ -9,20 +9,20 @@ importers:
   .:
     dependencies:
       '@tauri-apps/api':
-        specifier: 1.5.3
+        specifier: ^1
         version: 1.5.3
       typescript-event-target:
         specifier: 1.1.0
         version: 1.1.0
     devDependencies:
       '@tauri-apps/cli':
-        specifier: 1.5.11
+        specifier: ^1
         version: 1.5.11
       typescript:
-        specifier: 5.4.3
+        specifier: ^5.0.2
         version: 5.4.3
       vite:
-        specifier: 5.2.6
+        specifier: ^5.0.0
         version: 5.2.6
 
 packages:

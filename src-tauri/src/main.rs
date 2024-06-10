@@ -1,9 +1,14 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use dirs::config_dir;
+use keystroke::start_keystroke_listener;
+use serde::{Deserialize, Serialize};
+use std::fs::{self, File};
+use std::io::{self, Read, Write};
+use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use tauri::{Manager, State};
-use keystroke::start_keystroke_listener;
 use tray::create_tray_menu;
 
 mod keystroke;
@@ -19,38 +24,93 @@ struct Payload {
 struct AppState {
     font_size: Arc<Mutex<u32>>,
     padding: Arc<Mutex<u32>>,
-    selected_sound: Arc<Mutex<String>>,
+    sound: Arc<Mutex<String>>,
+}
+
+#[derive(Serialize, Deserialize)]
+struct Config {
+    font_size: u32,
+    padding: u32,
+    sound: String,
 }
 
 #[tauri::command]
-fn update_settings(font_size: u32, padding: u32, state: State<AppState>) {
-    println!("{font_size} {padding}");
+fn update_settings(font_size: u32, padding: u32, sound: String, state: State<AppState>) {
+    println!("{font_size} {padding} {sound}");
     *state.font_size.lock().unwrap() = font_size;
     *state.padding.lock().unwrap() = padding;
+    *state.sound.lock().unwrap() = sound.clone();
+    save_state(&Config {
+        font_size,
+        padding,
+        sound,
+    })
+    .expect("Failed to save settings");
 }
 
 #[tauri::command]
-fn set_selected_sound(sound: String, state: tauri::State<AppState>) {
-    let mut selected_sound = state.selected_sound.lock().unwrap();
-    *selected_sound = sound;
+fn get_state(state: tauri::State<'_, AppState>) -> Config {
+    Config {
+        font_size: *state.font_size.lock().unwrap(),
+        padding: *state.padding.lock().unwrap(),
+        sound: state.sound.lock().unwrap().clone(),
+    }
 }
 
-#[tauri::command]
-fn get_selected_sound(state: tauri::State<'_, AppState>) -> String {
-    let selected_sound = state.selected_sound.lock().unwrap();
-    selected_sound.clone()
+fn get_config_path() -> PathBuf {
+    let mut path = config_dir().unwrap_or_else(|| PathBuf::from("."));
+    path.push("klick");
+    fs::create_dir_all(&path).expect("Failed to create config directory");
+    path.push("klick.json");
+    path
+}
+
+fn load_state() -> io::Result<AppState> {
+    let config_path = get_config_path();
+    let config_path_str = config_path.display().to_string();
+    println!("{config_path_str}");
+    if config_path.exists() {
+        let mut file = File::open(config_path)?;
+        let mut contents = String::new();
+        file.read_to_string(&mut contents)?;
+        let config: Config = serde_json::from_str(&contents)?;
+        Ok(AppState {
+            font_size: Arc::new(Mutex::new(config.font_size)),
+            padding: Arc::new(Mutex::new(config.padding)),
+            sound: Arc::new(Mutex::new(config.sound)),
+        })
+    } else {
+        let config = Config {
+            font_size: 24,
+            padding: 10,
+            sound: "key_1.mp3".to_string(),
+        };
+        let state = AppState {
+            font_size: Arc::new(Mutex::new(config.font_size)),
+            padding: Arc::new(Mutex::new(config.padding)),
+            sound: Arc::new(Mutex::new(config.sound.clone())),
+        };
+        save_state(&config).expect("Failed to save settings");
+        Ok(state)
+    }
+}
+
+fn save_state(config: &Config) -> io::Result<()> {
+    let config_path = get_config_path();
+    let json = serde_json::to_string(&config)?;
+    let mut file = File::create(config_path)?;
+    file.write_all(json.as_bytes())?;
+    Ok(())
 }
 
 fn main() {
     let tauri_app = tauri::Builder::default();
     let tray = create_tray_menu();
 
+    let initial_state = load_state().expect("Failed to load initial state");
+
     tauri_app
-        .invoke_handler(tauri::generate_handler![
-            update_settings,
-            set_selected_sound,
-            get_selected_sound
-        ])
+        .invoke_handler(tauri::generate_handler![update_settings, get_state])
         .setup(|app| {
             start_keystroke_listener(app);
             Ok(())
@@ -73,11 +133,7 @@ fn main() {
         .on_system_tray_event(|app, event| {
             tray::on_tray_event(app, event);
         })
-        .manage(AppState {
-            font_size: Arc::new(Mutex::new(24)),
-            padding: Arc::new(Mutex::new(10)),
-            selected_sound: Arc::new(Mutex::new("key_1.mp3".to_string())),
-        })
+        .manage(initial_state)
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
