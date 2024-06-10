@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Keystroke Visualizer App</title>
+        <style>
+            body {
+                font-family: "Courier New", Courier, monospace;
+                background-color: #1e1e1e;
+                color: #c0c0c0;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                min-height: 100vh;
+            }
+
+            header {
+                padding: 20px;
+                margin-top: 20px;
+            }
+
+            header h1 {
+                font-size: 2.5em;
+                margin: 0;
+            }
+
+            header p {
+                font-size: 1.2em;
+                margin: 10px 0;
+            }
+
+            .download-buttons {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                margin: 20px 0;
+            }
+
+            .download-buttons a {
+                text-decoration: none;
+                color: #fff;
+                background-color: #007aff;
+                padding: 10px 20px;
+                border-radius: 5px;
+                transition: background-color 0.2s;
+            }
+
+            .download-buttons a:hover {
+                background-color: #005bb5;
+            }
+
+            .features {
+                max-width: 800px;
+                padding: 20px;
+                margin: 20px 0;
+                border-radius: 10px;
+                background-color: #2e2e2e;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            }
+
+            .feature {
+                margin-bottom: 20px;
+            }
+
+            .feature h2 {
+                font-size: 1.5em;
+                margin-bottom: 10px;
+            }
+
+            .feature p {
+                font-size: 1em;
+                margin-bottom: 10px;
+            }
+
+            .feature img {
+                max-width: 100%;
+                border-radius: 5px;
+            }
+
+            footer {
+                margin-top: auto;
+                padding: 10px;
+                background-color: #1e1e1e;
+            }
+
+            footer p {
+                margin: 0;
+                font-size: 0.9em;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Keystroke Visualizer App</h1>
+            <p>
+                Visualize your keystrokes in real-time. Perfect for tutorials
+                and presentations.
+            </p>
+            <div class="download-buttons">
+                <a href="#">Download for Windows</a>
+                <a href="#">Download for macOS</a>
+                <a href="#">Download for Ubuntu</a>
+            </div>
+        </header>
+
+        <section class="features">
+            <div class="feature">
+                <h2>Real-time Visualization</h2>
+                <p>
+                    See your keystrokes as you type with a clean and elegant
+                    overlay.
+                </p>
+                <img
+                    src="https://via.placeholder.com/800x400.png?text=Screenshot+1"
+                    alt="Real-time Visualization"
+                />
+            </div>
+            <div class="feature">
+                <h2>Customizable Appearance</h2>
+                <p>
+                    Adjust the font size, padding, and colors to match your
+                    preferences.
+                </p>
+                <img
+                    src="https://via.placeholder.com/800x400.png?text=Screenshot+2"
+                    alt="Customizable Appearance"
+                />
+            </div>
+            <div class="feature">
+                <h2>Lightweight and Fast</h2>
+                <p>
+                    Minimal performance impact, so you can focus on your
+                    presentation.
+                </p>
+                <img
+                    src="https://via.placeholder.com/800x400.png?text=Screenshot+3"
+                    alt="Lightweight and Fast"
+                />
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2024 Keystroke Visualizer App. All rights reserved.</p>
+        </footer>
+    </body>
+</html>
