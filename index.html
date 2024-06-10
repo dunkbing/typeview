@@ -1,42 +1,81 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="stylesheet" href="/src/styles.css" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script type="module" src="/src/main.ts" defer></script>
-        <style>
-            body {
-                color: white;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin: 0;
-                user-select: none;
-                -webkit-user-select: none;
-                -ms-user-select: none;
-                cursor: default;
-                font-size: 24px;
-                font-family: monospace;
-                font-weight: 600;
-            }
-            #content {
-                display: inline-block;
-                white-space: nowrap;
-            }
-            .keystroke {
-                display: block;
-                padding: 5px 10px;
-                letter-spacing: 5px;
-            }
-            .keystroke.hide {
-                opacity: 0;
-                transition: opacity 0.5s ease-out;
-            }
-        </style>
-    </head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Klick - KeyStroke visualizer</title>
+    <script type="module" src="/src/main.ts" defer></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        user-select: none;
+        cursor: default;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: monospace;
+      }
 
-    <body data-tauri-drag-region>
-        <div id="content"></div>
-    </body>
+      body {
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 8px;
+      }
+
+      /* Css Color */
+      :root {
+        --color-primary: #000000;
+        --color-secondary: #333333;
+        --color-tertiary: #666666;
+        --color-quaternary: #999999;
+        --color-quinary: #ffffff8d;
+      }
+
+      /* Dark mode */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --color-primary: #ffffff;
+          --color-secondary: #cccccc;
+          --color-tertiary: #999999;
+          --color-quaternary: #666666;
+          --color-quinary: #1e1f268d;
+        }
+      }
+
+      #content {
+        overflow: hidden;
+        padding: 3px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        font-size: 1.8rem;
+        background-color: var(--color-quinary);
+        border-radius: 5px;
+        text-align: center;
+        color: var(--color-secondary);
+      }
+
+      .pressed-key {
+        border: 1.5px solid var(--color-primary);
+        padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+        line-height: 100%;
+        text-align: center;
+        border-radius: 5px;
+        color: var(--color-primary);
+        font-weight: 600;
+        margin: 0 0.25rem;
+        background-color: var(--color-quaternary);
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div data-tauri-drag-region id="content"></div>
+  </body>
 </html>

@@ -1,9 +1,10 @@
 use rdev::{listen, EventType, Key};
-use tauri::Manager;
-use std::{fs::File, sync::Arc};
-use std::io::BufReader;
 use rodio::{Decoder, OutputStream, Sink};
+use std::io::BufReader;
+use std::path::PathBuf;
 use std::thread;
+use std::{fs::File, sync::Arc};
+use tauri::Manager;
 
 use crate::AppState;
 
@@ -26,29 +27,39 @@ pub fn start_keystroke_listener(app: &tauri::App) {
 
     let window = Arc::new(window);
     let state = Arc::new(state);
+    let sounds_dir = app
+        .path_resolver()
+        .resolve_resource("sounds/")
+        .map(PathBuf::into_os_string)
+        .and_then(|s| s.into_string().ok())
+        .unwrap();
 
     tauri::async_runtime::spawn(async move {
         let window_clone = Arc::clone(&window);
         let state_clone = Arc::clone(&state);
 
-        if let Err(error) = listen(move |event| {
-            match event.event_type {
-                EventType::KeyPress(key) => {
-                    if let Some(key_str) = get_key_string(key) {
-                        window_clone.emit("update-content", key_str).unwrap();
+        if let Err(error) = listen(move |event| match event.event_type {
+            EventType::KeyPress(key) => {
+                if let Some(key_str) = get_key_string(key) {
+                    window_clone.emit_to("main", "KeyPress", key_str).unwrap();
 
-                        let sound_path = state_clone.selected_sound.lock().unwrap().clone();
-                        play_sound(sound_path);
-                    }
+                    let sound_name = state_clone.selected_sound.lock().unwrap().clone();
+                    let sound_path = format!("{}/{}", sounds_dir, sound_name);
+
+                    play_sound(sound_path);
                 }
-                _ => (),
             }
+            EventType::KeyRelease(key) => {
+                if let Some(key_str) = get_key_string(key) {
+                    window_clone.emit_to("main", "KeyRelease", key_str).unwrap();
+                }
+            }
+            _ => (),
         }) {
             println!("Error: {:?}", error);
         }
     });
 }
-
 
 fn get_key_string(key: Key) -> Option<String> {
     match key {
