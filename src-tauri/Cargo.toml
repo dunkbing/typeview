@@ -1,9 +1,9 @@
 [package]
 name = "tauri-overlay"
 version = "0.0.0"
-description = "KeyStroke visualizer"
+description = "TypeView - KeyStroke visualizer"
 authors = ["dunkbing"]
-repository = "https://github.com/dunkbing/klick"
+repository = "https://github.com/dunkbing/typeview"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -12,7 +12,11 @@ edition = "2021"
 tauri-build = { version = "1", features = [] }
 
 [dependencies]
-tauri = { version = "1", features = [ "macos-private-api", "system-tray", "window-start-dragging" ] }
+tauri = { version = "1", features = [
+    "macos-private-api",
+    "system-tray",
+    "window-start-dragging",
+] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 rdev = { git = "https://github.com/fufesou/rdev" }

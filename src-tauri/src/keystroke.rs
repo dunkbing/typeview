@@ -46,7 +46,9 @@ pub fn start_keystroke_listener(app: &tauri::App) {
                     let sound_name = state_clone.sound.lock().unwrap().clone();
                     let sound_path = format!("{}/{}", sounds_dir, sound_name);
 
-                    play_sound(sound_path);
+                    if state_clone.sound_enabled.lock().unwrap().clone() {
+                        play_sound(sound_path);
+                    }
                 }
             }
             EventType::KeyRelease(key) => {

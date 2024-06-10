@@ -3,13 +3,17 @@ use tauri::{
     SystemTrayMenuItem,
 };
 
+use crate::AppState;
+
 pub fn create_tray_menu() -> SystemTray {
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
-    let toggle = CustomMenuItem::new("toggle".to_string(), "Toggle App");
+    let toggle_key = CustomMenuItem::new("toggle-key".to_string(), "Toggle App");
+    let toggle_sound = CustomMenuItem::new("toggle-sound".to_string(), "Toggle Sound");
     let settings = CustomMenuItem::new("settings".to_string(), "Settings");
 
     let tray_menu = SystemTrayMenu::new()
-        .add_item(toggle)
+        .add_item(toggle_key)
+        .add_item(toggle_sound)
         .add_item(settings)
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(quit);
@@ -21,7 +25,8 @@ pub fn on_tray_event(app: &AppHandle, event: SystemTrayEvent) {
     match event {
         SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
             "quit" => app.exit(0),
-            "toggle" => toggle_window(app),
+            "toggle-key" => toggle_key(app),
+            "toggle-sound" => toggle_sound(app),
             "settings" => show_settings_window(app),
             _ => {}
         },
@@ -29,15 +34,19 @@ pub fn on_tray_event(app: &AppHandle, event: SystemTrayEvent) {
     }
 }
 
-fn toggle_window(app: &AppHandle) {
+fn toggle_key(app: &AppHandle) {
     let window = app.get_window("main").unwrap();
     if window.is_visible().unwrap() {
         window.hide().unwrap();
-        return;
     } else {
         window.show().unwrap();
-        return;
     }
+}
+
+fn toggle_sound(app: &AppHandle) {
+    let state = app.state::<AppState>();
+    let mut sound_enabled = state.sound_enabled.lock().unwrap();
+    *sound_enabled = !*sound_enabled;
 }
 
 fn show_settings_window(app: &AppHandle) {
@@ -45,12 +54,11 @@ fn show_settings_window(app: &AppHandle) {
     match window {
         Some(win) => {
             if win.is_visible().unwrap() {
-                return;
+                win.hide().unwrap();
             } else {
                 win.show().unwrap();
-                return;
             }
         }
-        None => println!("Windows not available")
+        None => println!("Settings window not available"),
     }
 }

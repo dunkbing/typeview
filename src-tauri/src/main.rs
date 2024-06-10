@@ -25,6 +25,7 @@ struct AppState {
     font_size: Arc<Mutex<u32>>,
     padding: Arc<Mutex<u32>>,
     sound: Arc<Mutex<String>>,
+    sound_enabled: Arc<Mutex<bool>>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -59,9 +60,9 @@ fn get_state(state: tauri::State<'_, AppState>) -> Config {
 
 fn get_config_path() -> PathBuf {
     let mut path = config_dir().unwrap_or_else(|| PathBuf::from("."));
-    path.push("klick");
+    path.push("typeview");
     fs::create_dir_all(&path).expect("Failed to create config directory");
-    path.push("klick.json");
+    path.push("typeview.json");
     path
 }
 
@@ -78,6 +79,7 @@ fn load_state() -> io::Result<AppState> {
             font_size: Arc::new(Mutex::new(config.font_size)),
             padding: Arc::new(Mutex::new(config.padding)),
             sound: Arc::new(Mutex::new(config.sound)),
+            sound_enabled: Arc::new(Mutex::new(true)),
         })
     } else {
         let config = Config {
@@ -89,6 +91,7 @@ fn load_state() -> io::Result<AppState> {
             font_size: Arc::new(Mutex::new(config.font_size)),
             padding: Arc::new(Mutex::new(config.padding)),
             sound: Arc::new(Mutex::new(config.sound.clone())),
+            sound_enabled: Arc::new(Mutex::new(true)),
         };
         save_state(&config).expect("Failed to save settings");
         Ok(state)
@@ -112,6 +115,8 @@ fn main() {
     tauri_app
         .invoke_handler(tauri::generate_handler![update_settings, get_state])
         .setup(|app| {
+            let setting_window = app.get_window("settings").unwrap();
+            setting_window.hide().unwrap();
             start_keystroke_listener(app);
             Ok(())
         })

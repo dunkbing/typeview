@@ -7,7 +7,7 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "Klick",
+    "productName": "TypeView",
     "version": "../package.json"
   },
   "tauri": {
@@ -19,7 +19,7 @@
     },
     "windows": [
       {
-        "title": "Klick",
+        "title": "TypeView",
         "width": 600,
         "height": 65,
         "resizable": true,
@@ -38,7 +38,7 @@
         "title": "Settings",
         "label": "settings",
         "url": "settings.html",
-        "visible": true,
+        "visible": false,
         "width": 400,
         "height": 500
       }
@@ -53,7 +53,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "klick.db99.dev",
+      "identifier": "typeview.db99.dev",
       "publisher": "db99.dev",
       "icon": [
         "icons/32x32.png",
@@ -62,11 +62,9 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "resources": [
-        "sounds/*"
-      ],
-      "shortDescription": "Klick - KeyStroke visualizer",
-      "longDescription": "Klick - KeyStroke visualizer"
+      "resources": ["sounds/*"],
+      "shortDescription": "TypeView - KeyStroke visualizer",
+      "longDescription": "TypeView - KeyStroke visualizer"
     }
   }
 }
