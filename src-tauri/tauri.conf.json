@@ -8,34 +8,44 @@
   },
   "package": {
     "productName": "Klick",
-    "version": "0.0.0"
+    "version": "../package.json"
   },
   "tauri": {
     "allowlist": {
       "all": false,
-      "shell": {
-        "all": false,
-        "open": true
-      },
       "window": {
-        "startDragging": true,
-        "setSize": true
+        "startDragging": true
       }
     },
     "windows": [
       {
         "title": "Klick",
-        "width": 200,
-        "height": 100,
-        "x": 100,
-        "y": 100,
-        "resizable": false,
+        "width": 600,
+        "height": 65,
+        "resizable": true,
+        "focus": false,
+        "label": "main",
         "fullscreen": false,
+        "transparent": true,
         "decorations": false,
+        "minWidth": 500,
+        "minHeight": 40,
         "alwaysOnTop": true,
-        "transparent": true
+        "minimizable": false,
+        "maximizable": false
+      },
+      {
+        "title": "Settings",
+        "label": "settings",
+        "url": "settings.html",
+        "visible": true,
+        "width": 400,
+        "height": 500
       }
     ],
+    "systemTray": {
+      "iconPath": "icons/icon.png"
+    },
     "macOSPrivateApi": true,
     "security": {
       "csp": null
@@ -43,7 +53,8 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.klick.db99.dev",
+      "identifier": "klick.db99.dev",
+      "publisher": "db99.dev",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -51,7 +62,11 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "resources": ["sounds"]
+      "resources": [
+        "sounds/*"
+      ],
+      "shortDescription": "Klick - KeyStroke visualizer",
+      "longDescription": "Klick - KeyStroke visualizer"
     }
   }
 }

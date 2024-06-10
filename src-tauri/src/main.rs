@@ -1,17 +1,18 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use keystroke::start_keystroke_listener;
 use std::sync::{Arc, Mutex};
-use tauri::{Manager, State, WindowBuilder, WindowUrl};
-use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
+use tauri::{Manager, State};
+use keystroke::start_keystroke_listener;
+use tray::create_tray_menu;
 
 mod keystroke;
+mod tray;
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+#[derive(Clone, serde::Serialize)]
+struct Payload {
+    args: Vec<String>,
+    cwd: String,
 }
 
 #[derive(Clone)]
@@ -31,7 +32,7 @@ fn update_settings(font_size: u32, padding: u32, state: State<AppState>) {
 #[tauri::command]
 fn set_selected_sound(sound: String, state: tauri::State<AppState>) {
     let mut selected_sound = state.selected_sound.lock().unwrap();
-    *selected_sound = format!("sounds/{}", sound);
+    *selected_sound = sound;
 }
 
 #[tauri::command]
@@ -41,38 +42,41 @@ fn get_selected_sound(state: tauri::State<'_, AppState>) -> String {
 }
 
 fn main() {
-    tauri::Builder::default()
+    let tauri_app = tauri::Builder::default();
+    let tray = create_tray_menu();
+
+    tauri_app
         .invoke_handler(tauri::generate_handler![
-            greet,
             update_settings,
             set_selected_sound,
             get_selected_sound
         ])
         .setup(|app| {
-            let window = app.get_window("main").unwrap();
-            window.set_decorations(false).unwrap();
-            #[cfg(target_os = "macos")]
-            apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, None)
-                .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
-
-            #[cfg(target_os = "windows")]
-            apply_blur(&window, Some((18, 18, 18, 125)))
-                .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
-
             start_keystroke_listener(app);
-
-            WindowBuilder::new(app, "settings", WindowUrl::App("settings.html".into()))
-                .title("Settings")
-                .inner_size(400.0, 300.0)
-                .build()
-                .unwrap();
-
             Ok(())
+        })
+        .on_window_event(|event| {
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
+                let label = event.window().label();
+                if label == "settings" {
+                    event.window().hide().unwrap();
+                    api.prevent_close();
+                }
+            }
+        })
+        .plugin(tauri_plugin_window_state::Builder::default().build())
+        .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
+            app.emit_all("single-instance", Payload { args: argv, cwd })
+                .unwrap();
+        }))
+        .system_tray(tray)
+        .on_system_tray_event(|app, event| {
+            tray::on_tray_event(app, event);
         })
         .manage(AppState {
             font_size: Arc::new(Mutex::new(24)),
             padding: Arc::new(Mutex::new(10)),
-            selected_sound: Arc::new(Mutex::new("sounds/key_1.mp3".to_string())),
+            selected_sound: Arc::new(Mutex::new("key_1.mp3".to_string())),
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
