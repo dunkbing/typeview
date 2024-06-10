@@ -1,6 +1,22 @@
-# TypeView - Keystroke Visualizer
+#
+<p align="center">
+<img src="./website/icon.png" width="200" height="200" />
+<h1 align="center">TypeView - Keystroke Visualizer</h1>
+<h3 align="center">Visualize your keystrokes in real-time. Perfect for tutorials and presentations.
+<br>
+<a href="https://typeview.db99.dev/">[Landing Page]</a>
+</p>
 
-TypeView combines typing and viewing, providing a real-time visualization of your keystrokes. It's perfect for tutorials, presentations, or any scenario where you want to display your typing activity.
+## Screenshot
+<p align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./website/sc.png">
+  <img alt="TypeView Screenshots" src="./website/sc.png" width="840"/>
+</picture>
+</p>
+
+## Demo Video
+https://github.com/dunkbing/typeview/assets/42113525/6db87b98-512a-4c35-8f81-8084e4ad0eb0
 
 ## Features
 
