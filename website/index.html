@@ -3,7 +3,11 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Keystroke Visualizer App</title>
+        <meta
+            name="description"
+            content="TypeView - Real-time keystroke visualizer app. Perfect for tutorials and presentations."
+        />
+        <title>TypeView - Keystroke Visualizer App</title>
         <style>
             body {
                 font-family: "Courier New", Courier, monospace;
@@ -21,6 +25,15 @@
             header {
                 padding: 20px;
                 margin-top: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                flex: 1;
+            }
+
+            header img {
+                height: 100px;
             }
 
             header h1 {
@@ -44,7 +57,6 @@
             .download-buttons a {
                 text-decoration: none;
                 color: #fff;
-                background-color: #007aff;
                 padding: 10px 20px;
                 border-radius: 5px;
                 transition: background-color 0.2s;
@@ -53,16 +65,19 @@
                 gap: 5px;
             }
 
+            .download-buttons a.windows {
+                background-color: #007aff;
+            }
+
             .download-buttons a.mac {
                 background-color: #000;
-                color: #fff;
             }
 
             .download-buttons a.mac:hover {
                 background-color: #333;
             }
 
-            .download-buttons a:hover {
+            .download-buttons a.windows:hover {
                 background-color: #005bb5;
             }
 
@@ -94,13 +109,22 @@
                 margin-bottom: 10px;
             }
 
-            .feature img {
+            .feature video {
                 max-width: 100%;
                 border-radius: 5px;
             }
 
             .social-contact {
                 margin: 20px 0;
+                padding: 20px;
+                background-color: #333;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            }
+
+            .social-contact h2 {
+                margin-bottom: 10px;
+                font-size: 1.5em;
             }
 
             .social-contact a {
@@ -141,22 +165,33 @@
                 .features {
                     padding: 15px;
                 }
+
+                .social-contact {
+                    padding: 15px;
+                }
             }
         </style>
     </head>
     <body>
         <header>
-            <h1>Klick - Keystroke Visualizer App</h1>
+            <img src="/icon.png" alt="TypeView Logo" />
+            <h1>TypeView - Keystroke Visualizer App</h1>
             <p>
                 Visualize your keystrokes in real-time. Perfect for tutorials
                 and presentations.
             </p>
             <div class="download-buttons">
-                <a href="#" class="windows">
-                    <img src="win_logo.png" alt="Windows logo" />
+                <a
+                    href="https://github.com/dunkbing/typeview/releases/download/app-v0.0.0/TypeView_0.0.0_x64-setup.exe"
+                    class="windows"
+                >
+                    <img src="/win_logo.png" alt="Windows logo" />
                     Download for Windows
                 </a>
-                <a href="#" class="mac">
+                <a
+                    href="https://github.com/dunkbing/typeview/releases/download/app-v0.0.0/TypeView_0.0.0_aarch64.dmg"
+                    class="mac"
+                >
                     <img src="/apple_logo.png" alt="Apple logo" />
                     Download for macOS
                 </a>
@@ -170,7 +205,17 @@
                     See your keystrokes as you type with a clean and elegant
                     overlay.
                 </p>
-                <img src="/sc.png" alt="Real-time Visualization" />
+                <video controls>
+                    <source src="/demo.mov" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="feature">
+                <h2>Mechanical Key Sounds</h2>
+                <p>
+                    Enhance your typing experience with simulated mechanical key
+                    sounds.
+                </p>
             </div>
         </section>
 
@@ -178,12 +223,12 @@
             <h2>Contact & Follow</h2>
             <a href="https://db99.dev">Website</a>
             <a href="https://www.instagram.com/dunkbingg">Instagram</a>
-            <a href="https://x.com/dunkbingg">Twitter</a>
+            <a href="https://x.com/dunkbingg">Twitwwwter</a>
             <a href="https://www.tiktok.com/@dunkbing">TikTok</a>
         </section>
 
         <footer>
-            <p>&copy; 2024 Keystroke Visualizer App. All rights reserved.</p>
+            <p>&copy; 2024 TypeView. All rights reserved.</p>
         </footer>
     </body>
 </html>
