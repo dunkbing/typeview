@@ -37,6 +37,7 @@
                 display: flex;
                 justify-content: center;
                 gap: 10px;
+                flex-wrap: wrap;
                 margin: 20px 0;
             }
 
@@ -47,10 +48,27 @@
                 padding: 10px 20px;
                 border-radius: 5px;
                 transition: background-color 0.2s;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+
+            .download-buttons a.mac {
+                background-color: #000;
+                color: #fff;
+            }
+
+            .download-buttons a.mac:hover {
+                background-color: #333;
             }
 
             .download-buttons a:hover {
                 background-color: #005bb5;
+            }
+
+            .download-buttons img {
+                height: 20px;
+                filter: invert(1);
             }
 
             .features {
@@ -81,6 +99,20 @@
                 border-radius: 5px;
             }
 
+            .social-contact {
+                margin: 20px 0;
+            }
+
+            .social-contact a {
+                text-decoration: none;
+                color: #007aff;
+                margin: 0 10px;
+            }
+
+            .social-contact a:hover {
+                text-decoration: underline;
+            }
+
             footer {
                 margin-top: auto;
                 padding: 10px;
@@ -91,19 +123,43 @@
                 margin: 0;
                 font-size: 0.9em;
             }
+
+            @media (max-width: 600px) {
+                header h1 {
+                    font-size: 1.8em;
+                }
+
+                header p {
+                    font-size: 1em;
+                }
+
+                .download-buttons a {
+                    padding: 8px 16px;
+                    font-size: 0.9em;
+                }
+
+                .features {
+                    padding: 15px;
+                }
+            }
         </style>
     </head>
     <body>
         <header>
-            <h1>Keystroke Visualizer App</h1>
+            <h1>Klick - Keystroke Visualizer App</h1>
             <p>
                 Visualize your keystrokes in real-time. Perfect for tutorials
                 and presentations.
             </p>
             <div class="download-buttons">
-                <a href="#">Download for Windows</a>
-                <a href="#">Download for macOS</a>
-                <a href="#">Download for Ubuntu</a>
+                <a href="#" class="windows">
+                    <img src="win_logo.png" alt="Windows logo" />
+                    Download for Windows
+                </a>
+                <a href="#" class="mac">
+                    <img src="/apple_logo.png" alt="Apple logo" />
+                    Download for macOS
+                </a>
             </div>
         </header>
 
@@ -114,33 +170,16 @@
                     See your keystrokes as you type with a clean and elegant
                     overlay.
                 </p>
-                <img
-                    src="https://via.placeholder.com/800x400.png?text=Screenshot+1"
-                    alt="Real-time Visualization"
-                />
+                <img src="/sc.png" alt="Real-time Visualization" />
             </div>
-            <div class="feature">
-                <h2>Customizable Appearance</h2>
-                <p>
-                    Adjust the font size, padding, and colors to match your
-                    preferences.
-                </p>
-                <img
-                    src="https://via.placeholder.com/800x400.png?text=Screenshot+2"
-                    alt="Customizable Appearance"
-                />
-            </div>
-            <div class="feature">
-                <h2>Lightweight and Fast</h2>
-                <p>
-                    Minimal performance impact, so you can focus on your
-                    presentation.
-                </p>
-                <img
-                    src="https://via.placeholder.com/800x400.png?text=Screenshot+3"
-                    alt="Lightweight and Fast"
-                />
-            </div>
+        </section>
+
+        <section class="social-contact">
+            <h2>Contact & Follow</h2>
+            <a href="https://db99.dev">Website</a>
+            <a href="https://www.instagram.com/dunkbingg">Instagram</a>
+            <a href="https://x.com/dunkbingg">Twitter</a>
+            <a href="https://www.tiktok.com/@dunkbing">TikTok</a>
         </section>
 
         <footer>
