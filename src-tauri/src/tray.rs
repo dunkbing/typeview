@@ -7,7 +7,7 @@ use crate::AppState;
 
 pub fn create_tray_menu() -> SystemTray {
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
-    let toggle_key = CustomMenuItem::new("toggle-key".to_string(), "Toggle App");
+    let toggle_key = CustomMenuItem::new("toggle-key".to_string(), "Toggle Key");
     let toggle_sound = CustomMenuItem::new("toggle-sound".to_string(), "Toggle Sound");
     let settings = CustomMenuItem::new("settings".to_string(), "Settings");
 
