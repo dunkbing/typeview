@@ -1,0 +1,70 @@
+{
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "beforeBuildCommand": "pnpm build",
+    "devPath": "http://localhost:1420",
+    "distDir": "../dist",
+    "withGlobalTauri": true
+  },
+  "package": {
+    "productName": "TypeView",
+    "version": "../package.json"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "window": {
+        "startDragging": true
+      }
+    },
+    "windows": [
+      {
+        "title": "TypeView",
+        "width": 600,
+        "height": 65,
+        "resizable": true,
+        "focus": false,
+        "label": "main",
+        "fullscreen": false,
+        "transparent": true,
+        "decorations": false,
+        "minWidth": 500,
+        "minHeight": 40,
+        "alwaysOnTop": true,
+        "minimizable": false,
+        "maximizable": false
+      },
+      {
+        "title": "Settings",
+        "label": "settings",
+        "url": "settings.html",
+        "visible": false,
+        "width": 400,
+        "height": 500
+      }
+    ],
+    "systemTray": {
+      "iconPath": "icons/icon.png"
+    },
+    "macOSPrivateApi": true,
+    "security": {
+      "csp": null
+    },
+    "bundle": {
+      "active": true,
+      "targets": "all",
+      "identifier": "typeview.db99.dev",
+      "publisher": "db99.dev",
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "resources": ["sounds/*"],
+      "shortDescription": "TypeView - KeyStroke visualizer",
+      "longDescription": "TypeView - KeyStroke visualizer"
+    }
+  }
+}
