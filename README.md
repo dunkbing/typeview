@@ -1,6 +1,6 @@
 #
 <p align="center">
-<img src="./website/icon.png" width="200" height="200" />
+<img src="./src-tauri/icons/icon.png" width="200" height="200" />
 <h1 align="center">TypeView - Keystroke Visualizer</h1>
 <h3 align="center">Visualize your keystrokes in real-time. Perfect for tutorials and presentations.
 <br>
