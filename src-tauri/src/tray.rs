@@ -56,6 +56,7 @@ fn show_settings_window(app: &AppHandle) {
             if win.is_visible().unwrap() {
                 win.hide().unwrap();
             } else {
+                win.set_focus().unwrap();
                 win.show().unwrap();
             }
         }
