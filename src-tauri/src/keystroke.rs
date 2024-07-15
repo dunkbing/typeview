@@ -4,7 +4,7 @@ use std::io::BufReader;
 use std::path::PathBuf;
 use std::thread;
 use std::{fs::File, sync::Arc};
-use tauri::Manager;
+use tauri::{Emitter, Manager};
 
 use crate::AppState;
 
@@ -22,16 +22,21 @@ fn play_sound(sound_path: String) {
 }
 
 pub fn start_keystroke_listener(app: &tauri::App) {
-    let window = app.get_window("main").unwrap();
+    let window = app.get_webview_window("main").unwrap();
     let state = app.state::<AppState>().inner().clone();
 
     let window = Arc::new(window);
     let state = Arc::new(state);
     let sounds_dir = app
-        .path_resolver()
-        .resolve_resource("sounds/")
+        .path()
+        .resolve("sounds", tauri::path::BaseDirectory::Resource)
+        // .path_resolver()
+        // .resolve_resource("sounds/")
         .map(PathBuf::into_os_string)
-        .and_then(|s| s.into_string().ok())
+        .and_then(|s| {
+            let s = s.into_string().unwrap();
+            Ok(s)
+        })
         .unwrap();
 
     tauri::async_runtime::spawn(async move {
@@ -41,7 +46,9 @@ pub fn start_keystroke_listener(app: &tauri::App) {
         if let Err(error) = listen(move |event| match event.event_type {
             EventType::KeyPress(key) => {
                 if let Some(key_str) = get_key_string(key) {
-                    window_clone.emit_to("main", "KeyPress", key_str).unwrap();
+                    (*window_clone)
+                        .emit_to("main", "KeyPress", key_str)
+                        .unwrap();
 
                     let sound_name = state_clone.sound.lock().unwrap().clone();
                     let sound_path = format!("{}/{}", sounds_dir, sound_name);
@@ -53,7 +60,9 @@ pub fn start_keystroke_listener(app: &tauri::App) {
             }
             EventType::KeyRelease(key) => {
                 if let Some(key_str) = get_key_string(key) {
-                    window_clone.emit_to("main", "KeyRelease", key_str).unwrap();
+                    (*window_clone)
+                        .emit_to("main", "KeyRelease", key_str)
+                        .unwrap();
                 }
             }
             _ => (),

@@ -1,41 +1,95 @@
 use tauri::{
-    AppHandle, CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu,
-    SystemTrayMenuItem,
+    image::Image,
+    menu::{CheckMenuItemBuilder, MenuBuilder, MenuItemBuilder},
+    tray::TrayIconBuilder,
+    AppHandle, Manager,
 };
+use tauri_plugin_store::StoreBuilder;
 
 use crate::AppState;
 
-pub fn create_tray_menu() -> SystemTray {
-    let quit = CustomMenuItem::new("quit".to_string(), "Quit");
-    let toggle_key = CustomMenuItem::new("toggle-key".to_string(), "Toggle Key");
-    let toggle_sound = CustomMenuItem::new("toggle-sound".to_string(), "Toggle Sound");
-    let settings = CustomMenuItem::new("settings".to_string(), "Settings");
+pub fn build(app: &AppHandle) {
+    let tray_menu = MenuBuilder::new(app)
+        .items(&[
+            &MenuItemBuilder::with_id("quit", "Quit")
+                .build(app)
+                .expect(""),
+            &CheckMenuItemBuilder::with_id("toggle-key", "Toggle Key")
+                .checked(get_tray_setting(app, "toggle-key".to_string()))
+                .build(app)
+                .expect(""),
+            &CheckMenuItemBuilder::with_id("toggle-sound", "Toggle Sound")
+                .checked(get_tray_setting(app, "toggle-sound".to_string()))
+                .build(app)
+                .expect(""),
+            &MenuItemBuilder::with_id("settings", "Settings")
+                .build(app)
+                .expect(""),
+        ])
+        .build()
+        .expect("Failed to build tray menu");
 
-    let tray_menu = SystemTrayMenu::new()
-        .add_item(toggle_key)
-        .add_item(toggle_sound)
-        .add_item(settings)
-        .add_native_item(SystemTrayMenuItem::Separator)
-        .add_item(quit);
-
-    SystemTray::new().with_menu(tray_menu)
+    let tray = TrayIconBuilder::with_id("tray")
+        .icon(Image::from_bytes(include_bytes!("../icons/icon.png")).expect(""))
+        .menu(&tray_menu)
+        .on_menu_event(move |app, event| match event.id().as_ref() {
+            "quit" => {
+                app.exit(0);
+            }
+            "toggle-key" => {
+                update_tray_setting(app, "toggle-key".to_string());
+                toggle_key(&app);
+            }
+            "toggle-sound" => {
+                update_tray_setting(app, "toggle-sound".to_string());
+                toggle_sound(&app);
+            }
+            "settings" => {
+                show_settings_window(&app);
+            }
+            _ => (),
+        });
+    tray.build(app).expect("Failed to build tray");
 }
 
-pub fn on_tray_event(app: &AppHandle, event: SystemTrayEvent) {
-    match event {
-        SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
-            "quit" => app.exit(0),
-            "toggle-key" => toggle_key(app),
-            "toggle-sound" => toggle_sound(app),
-            "settings" => show_settings_window(app),
-            _ => {}
-        },
-        _ => {}
+pub fn get_tray_setting(app: &AppHandle, key: String) -> bool {
+    let mut store = StoreBuilder::new("app_data.bin").build(app.clone());
+    store.load().unwrap_or_default();
+
+    let setting_value = store
+        .get(key.clone())
+        .unwrap_or(&serde_json::Value::Bool(true))
+        .as_bool()
+        .unwrap();
+
+    setting_value
+}
+
+fn update_tray_setting(app: &AppHandle, key: String) {
+    let mut store = StoreBuilder::new("app_data.bin").build(app.clone());
+    store.load().unwrap_or_default();
+
+    // Get current value or true if not found
+    let setting_value = get_tray_setting(app, key.clone());
+
+    match setting_value {
+        true => {
+            store.insert(key.clone(), false.into()).unwrap();
+        }
+        false => {
+            store.insert(key.clone(), true.into()).unwrap();
+        }
     }
+    store.save().expect("Failed to save store");
+
+    // log updated value
+    let updated_value = get_tray_setting(app, key.clone());
+
+    println!("{}: {}", key, updated_value);
 }
 
 fn toggle_key(app: &AppHandle) {
-    let window = app.get_window("main").unwrap();
+    let window = app.get_webview_window("main").unwrap();
     if window.is_visible().unwrap() {
         window.hide().unwrap();
     } else {
@@ -50,7 +104,7 @@ fn toggle_sound(app: &AppHandle) {
 }
 
 fn show_settings_window(app: &AppHandle) {
-    let window = app.get_window("settings");
+    let window = app.get_webview_window("settings");
     match window {
         Some(win) => {
             if win.is_visible().unwrap() {

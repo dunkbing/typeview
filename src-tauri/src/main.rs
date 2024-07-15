@@ -8,8 +8,8 @@ use std::fs::{self, File};
 use std::io::{self, Read, Write};
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
+use tauri::Emitter;
 use tauri::{Manager, State};
-use tray::create_tray_menu;
 
 mod keystroke;
 mod tray;
@@ -108,36 +108,33 @@ fn save_state(config: &Config) -> io::Result<()> {
 
 fn main() {
     let tauri_app = tauri::Builder::default();
-    let tray = create_tray_menu();
 
     let initial_state = load_state().expect("Failed to load initial state");
 
     tauri_app
         .invoke_handler(tauri::generate_handler![update_settings, get_state])
         .setup(|app| {
-            let setting_window = app.get_window("settings").unwrap();
+            let app_handle = app.app_handle();
+            tray::build(app_handle);
+            let setting_window = app.get_webview_window("settings").unwrap();
             setting_window.hide().unwrap();
             start_keystroke_listener(app);
             Ok(())
         })
-        .on_window_event(|event| {
-            if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
-                let label = event.window().label();
+        .on_window_event(|win, event| {
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                let label = win.label();
                 if label == "settings" {
-                    event.window().hide().unwrap();
+                    win.hide().unwrap();
                     api.prevent_close();
                 }
             }
         })
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
-            app.emit_all("single-instance", Payload { args: argv, cwd })
+            app.emit("single-instance", Payload { args: argv, cwd })
                 .unwrap();
         }))
-        .system_tray(tray)
-        .on_system_tray_event(|app, event| {
-            tray::on_tray_event(app, event);
-        })
         .manage(initial_state)
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

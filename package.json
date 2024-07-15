@@ -10,12 +10,13 @@
     "tauri": "tauri"
   },
   "dependencies": {
-    "@tauri-apps/api": "^1",
+    "@tauri-apps/api": "2.0.0-beta.15",
     "typescript-event-target": "1.1.0"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^1",
-    "vite": "^5.0.0",
-    "typescript": "^5.0.2"
-  }
+    "@tauri-apps/cli": "2.0.0-beta.22",
+    "typescript": "^5.0.2",
+    "vite": "^5.0.0"
+  },
+  "packageManager": "pnpm@9.5.0+sha256.dbdf5961c32909fb030595a9daa1dae720162e658609a8f92f2fa99835510ca5"
 }
