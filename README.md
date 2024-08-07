@@ -20,9 +20,9 @@ https://github.com/dunkbing/typeview/assets/42113525/6db87b98-512a-4c35-8f81-808
 
 ## Features
 
-- **Real-time Visualization**: Shows your keystrokes with a clean overlay.
-- **Mechanical Key Sound**: Simulates mechanical key sounds.
-- **Lightweight**: Minimal performance impact.
+- Shows your keystrokes on the screen.
+- Simulates mechanical key sounds.
+- Lightweight.
 
 ## Installation
 
@@ -40,6 +40,3 @@ This command resets the extended attributes of the app and re-signs it.
 
 Download the installer and follow the on-screen instructions to complete the installation.
 
-## Usage
-
-Open TypeView and start typing. Your keystrokes will be visualized in real-time.
